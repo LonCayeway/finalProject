@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>J. Barclay-Morton: Deli Counter</title>
+		<style>
+			
+			/*
+				set background image in position, set background color
+			*/
+			
+			body {
+				background-image: url(2sunflower.png);
+				background-repeat: no-repeat;
+				background-position-x: 180px;
+				background-color: hsla(60, 91%, 72%, 0.56); 
+			}
+			
+			/*
+				set width of counter to mobile phone specs
+			*/
+			
+			main {
+				width: 400px;
+				padding: 20px;
+				position: relative;
+				
+			}
+			
+			/*
+				style the main title	
+			*/
+			
+			h1 {
+				font-size: 3.25em;
+				font-family: sans-serif;
+				font-weight: bolder;
+				color:#08770a; 
+				
+			}
+			
+			/*
+				style the catch-phrase
+			*/
+			
+			h2 {
+				font-size: 1.75em;
+				
+			}
+			
+			/*
+				name the app
+			*/
+			
+			h3 {
+				font-size: 1.5em;
+				text-align: center;
+			}
+			
+			/*
+				style the customer tally call-out
+			*/
+			
+			h4 {
+				font-size: 1.25em;
+				text-align: left;
+			}
+			
+			/*
+				adjust the text input boxes 
+			*/
+			
+			input {
+				padding: 4px;
+				
+			}
+			
+			/*
+				define the input form section
+			*/
+			
+			form {
+				background-color: yellow;
+				text-align: center;
+				padding: 10px;
+				
+			}
+			
+			/*
+				define the output table section
+			*/
+			
+			section {
+				
+				padding-bottom: 10px;
+				padding-left: 20px;
+				background-color:hsla(136, 88%, 70%, 1);
+			}
+			
+			/*
+				style the table
+			*/
+			
+			table {
+				text-align: center;
+				border-width: 8px;
+				background-color: white;
+				border-color: rgba(65, 207, 67, 0.85);
+				border-style:ridge;
+				margin: 20px;
+				
+			}
+			
+			/*
+				style the table headings
+			*/
+			
+			th {
+				border-style: double;
+				padding: 10px;
+				
+			}
+			
+			/*
+				style the table cells
+			*/
+			
+			td {
+				border-style: inset;
+				padding: 10px;
+				
+			}
+		
+			
+		
+		</style>
+		
+	</head>
+	
+		<!-- 
+			
+			=> Build an array of objects that holds each customer's name, and what they ordered
+			–> Starts with an empty array
+			
+			=> Build a function, that puts a string containing what the person ordered and the name of the person who ordered and who wants to join the waiting line in the deli, into the array
+			
+			=> Build a function that displays everyone's current place in line on an HTML table 
+			–> If there is nobody in line, it should say "The line is currently empty."
+			
+			–> Rememebr that people like to count from 1, not from 0
+			
+			=> Build a function which should call (display on the webpage) the next person in line and then remove them from the first slot once they are served
+			–> If nobody is in line, it should call out (display on the web page) the "There is noboby waiting to be served!"
+			
+			HTML Elements: 
+			
+			> Title: Local Deli Queue
+			> Input boxes: "Customer's Name" and "Customer's Order"
+			> Input buttons: "Add Customer" and "Customer Served"
+			
+			> Display table: three columns; "Position", "Name", and "Order".
+			> Single display line, for: "There are no customers in line." 
+			
+			
+			 -->
+	<body>
+		
+		<!-- 
+			Primary identifying text for site
+		-->	
+		
+		<main>
+			
+			<h1>Sunflower <br> Vegan Deli</h1>
+			<h2><em>"If We Don't Have It,<br>
+				You Don't Want It!"</em></h2>
+			<h3> Customer Queue</h3> 
+		
+		<!-- 
+			Information input form section
+		-->	
+				
+		<form>
+			<input type="button" value="Clear Input Fields"onclick="clearField()">
+			<br><br>
+			Customer's Name:
+			<input id="cName" type="text" value="" ><br>
+			Customer's Order: 
+			<input id="cOrder" type="text" value=""><br><br>
+			
+			<input type="button" value="Add New Customer" onclick="addToQueue()"><br>
+			
+		</form>
+		
+		<section id="display">
+			
+			<br>
+			
+			<input type="button" value="Customer Served" onclick="leaveQueue()">
+					
+			<br>
+		
+		<!-- 
+			Display table for customer information
+		-->	
+					
+			<table id="beingServed">
+				<tr>
+					<th>Position</th>
+					<th>Name</th>
+					<th>Order</th>
+				</tr>
+	
+			</table>
+			<br>
+		
+		<!-- 
+			Tally of outstanding orders: since each customer retains a unique order number, 
+			this allows an overview of the total number of customers waiting to be served
+		-->	
+			
+			<input type="button" value="Orders Outstanding" onclick="countOrders()">
+			
+			<h4 id="noOrders"></h4>
+		
+		<!-- 
+			End of HTML display elements; beginning of JavaScript
+		-->	
+		
+		</section>
+		
+		</main>
+		
+		<script type="text/javascript">
+			
+			/* 
+				creating an array to store inputs from customer orders, and to populate the display table
+			*/
+			
+			var customers = []
+			var order = []
+			var pos = []
+			
+			/* 
+				defining the first input button's function
+			*/
+			
+			function addToQueue (){
+			
+			/* 
+				pulling the values inputed from the text boxes
+			*/
+			
+				var custOrder = {
+								
+				client: document.getElementById('cName').value, 
+				food: document.getElementById('cOrder').value 
+				
+				}
+			
+			/* 
+				adding the extraxted input values to the array
+			*/
+			
+				customers.push(custOrder.client);
+				order.push(custOrder.food);
+				
+			/* 
+				creating the table rows and cells to display customer data
+			*/	
+			
+				var entry = document.createElement('tr');
+				
+				document.getElementById('beingServed').appendChild(entry);
+				var cellPos = entry.insertCell(0);
+				var cellName = entry.insertCell(1);
+				var cellOrder = entry.insertCell(2);
+			
+			/* 
+				adding data to the display table
+			*/	
+				
+				cellPos.innerHTML = customers.length;
+				cellName.innerHTML = custOrder.client;
+				cellOrder.innerHTML = custOrder.food;
+				
+				row.appendChild(cellPos);
+                row.appendChild(cellName);
+                row.appendChild(cellOrder);
+			
+			}
+			
+			/* 
+				clearing unwanted text from the input boxes 
+			*/
+
+			function clearField(){
+				 document.getElementById("cName").value = "";
+				 document.getElementById("cOrder").value = "";
+			}
+			
+			/* 
+				removing each customer from the display table after they have been served
+			*/
+				
+			function leaveQueue(){
+				
+				document.getElementById("beingServed").deleteRow(1);
+				
+			}
+			
+			/* 
+				rendering a current count for the total number of orders yet to be filled
+			*/
+			
+			function countOrders(){
+				
+				var i = document.getElementById("beingServed").rows.length;
+    
+				document.getElementById("noOrders").innerHTML = "Number of customers waiting: " + (i-1) ;
+			}
+
+				
+		</script>
+		
+	</body>
+</html>
